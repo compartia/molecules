@@ -3,10 +3,10 @@ import * as T from 'three'
 export const CONSTANTS = {
     ELECTRON_MASS: 0.00054858, //in atomic unit
     ELECTRON_CHARGE: -1,
-
 }
+
 export const PARAMS = {
-    speed: 0.00005,
+    speed: 0.000005,
     COULUMB_GAUGE: 1
 }
 
@@ -113,7 +113,7 @@ export class ElectronCloud extends AbstractParticle {
             e.vel.z = Math.random() * scale - scale / 2;
 
 
-            e.pos.setLength(Math.random() * scale);
+            e.pos.setLength(Math.random() + scale);
 
             // e.vel = e.pos.clone().reflect( <T.Vector3>{x:1,y:1,z:1});
 
@@ -239,9 +239,9 @@ export class Molecule extends AbstractParticle {
     }
 
 
-    public forEachElectron(callback) {
+    public forEachElectron(callback:(ElectronCloud)=>any) {
         for (let electron of this.electrons) {
-            for (let e of electron.bits) {
+            for (let e of electron.bits) {                
                 callback(e);
             }
         }
