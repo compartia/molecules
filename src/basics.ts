@@ -11,13 +11,21 @@ export class Lib {
 		color: 0xcc4466,
 		metalness: 0.3,
 		roughness: 0.8,
-		side: T.DoubleSide
+		side: T.FrontSide
 	});
 
 
 	public static shiny = new T.MeshPhongMaterial({
 		color: 0xaaaacc, specular: 0xffffff, shininess: 250,
 		// wireframe: true,
+		side: T.FrontSide, vertexColors: T.VertexColors
+	});
+
+	public static trans = new T.MeshPhongMaterial({
+		color: 0xffffff, specular: 0xffffff, shininess: 100,
+		// wireframe: true,
+		transparent:true,
+		opacity:0.3,
 		side: T.DoubleSide, vertexColors: T.VertexColors
 	});
 }
@@ -122,6 +130,7 @@ export abstract class SimpleScene {
 		this.camera.position.z = 5
 
 		this.camera.lookAt(this.scene.position);
+		// this.camera.lookAt(<T.Vector3>{x:0,y:5,z:0});
 
 	}
 

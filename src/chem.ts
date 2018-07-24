@@ -6,8 +6,8 @@ export const CONSTANTS = {
 
 }
 export const PARAMS = {
-    speed: 0.00005,
-    COULUMB_GAUGE: 1
+    speed: 0.000005,
+    COULUMB_GAUGE: 0.1
 }
 
 export interface SimpleParticle {
@@ -113,7 +113,7 @@ export class ElectronCloud extends AbstractParticle {
             e.vel.z = Math.random() * scale - scale / 2;
 
 
-            e.pos.setLength(Math.random() * scale);
+            e.pos.setLength(Math.random() + scale);
 
             // e.vel = e.pos.clone().reflect( <T.Vector3>{x:1,y:1,z:1});
 
@@ -241,7 +241,7 @@ export class Molecule extends AbstractParticle {
 
     public forEachElectron(callback:(ElectronCloud)=>any) {
         for (let electron of this.electrons) {
-            for (let e of electron.bits) {
+            for (let e of electron.bits) {                
                 callback(e);
             }
         }

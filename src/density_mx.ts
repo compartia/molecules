@@ -45,27 +45,29 @@ export class DensityMatrix {
 
     public update(m: Molecule) {
         m.forEachElectron(e => {
-            this.catchPos(e.pos);
+            this.catchPos(e.pos, Math.abs(e.charge) );
         });
     }
 
-    public catchPos(pos: T.Vector3) {
+    public catchPos(pos: T.Vector3, charge: number) {
+        if(isNaN(charge)) return;
+
         let relativePos = pos.clone().sub(this.min);
         let x = Math.floor(relativePos.x / this.cellSize.x);
         let y = Math.floor(relativePos.y / this.cellSize.y);
         let z = Math.floor(relativePos.z / this.cellSize.z);
 
-        if(!this.inRange(x, y, z)) return;
-        this.tensor[this.index(x, y, z)] += 1
+        if (!this.inRange(x, y, z)) return;
+        this.tensor[this.index(x, y, z)] += charge;
     }
 
     public getAt(x, y, z): number {
-        if(!this.inRange(x, y, z)) return undefined;
+        if (!this.inRange(x, y, z)) return undefined;
         return this.tensor[this.index(x, y, z)];
     }
 
     public setAt(x, y, z, val) {
-        if(!this.inRange(x, y, z)) throw "index out of range";
+        if (!this.inRange(x, y, z)) throw "index out of range";
         this.tensor[this.index(x, y, z)] = val;
     }
 
@@ -75,7 +77,7 @@ export class DensityMatrix {
         return true;
     }
 
-    private index(x, y, z) {
+    public index(x, y, z) {
         return (x * this.numberOfCellsOnSide * this.numberOfCellsOnSide) + (y * this.numberOfCellsOnSide) + z;
     }
 

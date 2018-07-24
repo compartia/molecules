@@ -50,7 +50,7 @@ import * as T from 'three'
         const side = 3;
         const dm: DensityMatrix = new DensityMatrix(new T.Vector3(-1, -1, -1), new T.Vector3(1, 1, 1), side);
 
-        dm.catchPos(new T.Vector3(0.9, 0.9, 0.9));
+        dm.catchPos(new T.Vector3(0.9, 0.9, 0.9), 1);
         assert.equal(dm.getAt(2, 2, 2), 1);
     }
 
