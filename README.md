@@ -3,6 +3,8 @@
 
 Molecule electron density - related experiments
 
+![Image](docs/chem.gif)
+
 
 ## Useful Links:
 
