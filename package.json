@@ -4,14 +4,20 @@
   "description": "three.js + typescript",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "pretest": "tsc",
+    "test": "mocha ./lib/**/*.spec.js",
     "start": "webpack-dev-server --inline --open"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/compartia/molecules.git"
   },
-  "keywords": [],
+  "keywords": [
+    "molecules",
+    "3d",
+    "simulation",
+    "typescript"
+  ],
   "author": "Artem Zaborskii",
   "license": "MIT",
   "bugs": {
@@ -19,13 +25,17 @@
   },
   "homepage": "https://github.com/compartia/molecules#readme",
   "devDependencies": {
+    "@types/three": "latest",
     "awesome-typescript-loader": "latest",
     "browser-sync": "latest",
     "browser-sync-webpack-plugin": "latest",
+    "chai": "^4.1.2",
     "css-loader": "latest",
     "extract-text-webpack-plugin": "latest",
     "html-webpack-plugin": "latest",
     "json-loader": "latest",
+    "mocha": "^5.2.0",
+    "mocha-typescript": "^1.1.17",
     "progress-bar-webpack-plugin": "latest",
     "style-loader": "latest",
     "typescript": "latest",
@@ -34,7 +44,6 @@
     "webpack-dev-server": "latest"
   },
   "dependencies": {
-    "@types/three": "latest",
     "three": "latest",
     "three-addons": "^1.2.0"
   }

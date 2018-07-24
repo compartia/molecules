@@ -239,7 +239,7 @@ export class Molecule extends AbstractParticle {
     }
 
 
-    public forEachElectron(callback) {
+    public forEachElectron(callback:(ElectronCloud)=>any) {
         for (let electron of this.electrons) {
             for (let e of electron.bits) {
                 callback(e);
