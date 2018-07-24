@@ -55,18 +55,25 @@ export class DensityMatrix {
         let y = Math.floor(relativePos.y / this.cellSize.y);
         let z = Math.floor(relativePos.z / this.cellSize.z);
 
-        if (x < this.numberOfCellsOnSide && y < this.numberOfCellsOnSide && z < this.numberOfCellsOnSide)
-            this.tensor[this.index(x, y, z)] += 1
+        if(!this.inRange(x, y, z)) return;
+        this.tensor[this.index(x, y, z)] += 1
     }
 
     public getAt(x, y, z): number {
+        if(!this.inRange(x, y, z)) return undefined;
         return this.tensor[this.index(x, y, z)];
     }
 
     public setAt(x, y, z, val) {
+        if(!this.inRange(x, y, z)) throw "index out of range";
         this.tensor[this.index(x, y, z)] = val;
     }
 
+    private inRange(x, y, z) {
+        if (x < 0 || y < 0 || z < 0) return false;
+        if (x > this.numberOfCellsOnSide && y > this.numberOfCellsOnSide && z > this.numberOfCellsOnSide) return false;
+        return true;
+    }
 
     private index(x, y, z) {
         return (x * this.numberOfCellsOnSide * this.numberOfCellsOnSide) + (y * this.numberOfCellsOnSide) + z;
