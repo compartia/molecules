@@ -1,5 +1,15 @@
 import * as T from 'three'
 
+export const CONSTANTS = {
+    ELECTRON_MASS: 0.00054858, //in atomic unit
+    ELECTRON_CHARGE: -1,
+
+}
+export const PARAMS = {
+    speed: 0.00005,
+    COULUMB_GAUGE: 1
+}
+
 export interface SimpleParticle {
     pos: T.Vector3;
     vel: T.Vector3;
@@ -19,8 +29,8 @@ export class ChargedParticle implements SimpleParticle {
 
     mesh: any;
 
-    public update() {
-        this.pos.add(this.vel);
+    public update(speed: number) {
+        this.pos.add(this.vel.clone().multiplyScalar(speed));
         this.fixPos();
     }
 
@@ -40,16 +50,16 @@ export class Nucleus extends ChargedParticle {
     constructor(protons: number, neutrons: number) {
         super();
         this.mass = protons + neutrons;
-        this.charge = -Electron.CHARGE * protons;
+        this.charge = -CONSTANTS.ELECTRON_CHARGE * protons;
     }
 }
 
 export abstract class Electron extends ChargedParticle {
-    static MASS = 0.00054858;
-    static CHARGE = -1;
+
 }
 
 export class ElectronBit extends ChargedParticle {
+    //an attempt to emulate a small bit of an electron cloud
 
     constructor(mass, charge) {
         super();
@@ -70,11 +80,11 @@ abstract class AbstractParticle implements SimpleParticle {
     }
 
     get mass(): number {
-        return Electron.MASS;
+        return CONSTANTS.ELECTRON_MASS;
     }
 
     get charge(): number {
-        return Electron.CHARGE;
+        return CONSTANTS.ELECTRON_CHARGE;
     }
 
     get spin(): T.Vector3 {
@@ -117,8 +127,8 @@ export class ElectronCloud extends AbstractParticle {
 
     constructor(n: number) {
         super();
-        let average_masss = Electron.MASS / n;
-        let average_charge = Electron.CHARGE / n;
+        let average_masss = CONSTANTS.ELECTRON_MASS / n;
+        let average_charge = CONSTANTS.ELECTRON_CHARGE / n;
 
         for (let i = 0; i < n; i++) {
             let eb = new ElectronBit(average_masss, average_charge);
@@ -126,9 +136,9 @@ export class ElectronCloud extends AbstractParticle {
         }
     }
 
-    public update() {
+    public update(speed: number) {
         for (let b of this.bits) {
-            b.update();
+            b.update(speed);
         }
     }
 }
@@ -145,47 +155,52 @@ export class Molecule extends AbstractParticle {
         this.electrons.push(e);
     }
 
-    public update() {
+    public update(speed: number) {
         for (let e of this.electrons) {
-            e.update();
+            e.update(speed);
         }
         for (let n of this.nuclei) {
-            n.update();
+            n.update(speed);
         }
     }
 
-    public calc(speed: number) {
+    public Ĥ() {
+        //really naive approach to nail the clamped Hamiltonian
+
+
+        //TODO: try relativistic approac: mind the contraction of the 6s orbital
 
 
         //N-N
+        //The potential energy arising from Coulombic nuclei-nuclei repulsions – also known as the nuclear repulsion energy.
         for (let n1 of this.nuclei) {
             for (let n2 of this.nuclei) {
 
-                this.p2pInteract(n1, n2, speed / 2);
+                this.p2pInteract(n1, n2, 1 / 2 * PARAMS.speed);
 
             }
         }
 
         //N-E
+        //The potential energy between the electrons and nuclei – the total electron-nucleus Coulombic attraction in the system; 
         for (let n of this.nuclei) {
             for (let electron1 of this.electrons) {
                 for (let e of electron1.bits) {
-                    this.p2pInteract(n, e, speed);
+                    this.p2pInteract(n, e, 1 * PARAMS.speed);
                 }
             }
         }
 
 
         //E-E
+        //The potential energy arising from Coulombic electron-electron repulsions
         for (let electron1 of this.electrons) {
             for (let electron2 of this.electrons) {
                 if (electron1 != electron2) {
 
                     for (let e1 of electron1.bits) {
-
                         for (let e2 of electron2.bits) {
-
-                            this.p2pInteract(e1, e2, speed / 2);
+                            this.p2pInteract(e1, e2, 1 / 2 * PARAMS.speed);
                         }
                     }
 
@@ -196,12 +211,12 @@ export class Molecule extends AbstractParticle {
     }
 
 
-    public p2pInteract(e: SimpleParticle, n: SimpleParticle, speed: number) {
-
+    public p2pInteract(e: SimpleParticle, n: SimpleParticle, k: number) {
+        //k==1/2 for el-el an nuk-nuk because of symmetry
         if (e === n) return;
 
         let rSquared = e.pos.distanceToSquared(n.pos);
-        let attractionMagnitude = speed * e.charge * n.charge / rSquared;
+        let attractionMagnitude = PARAMS.COULUMB_GAUGE * k * e.charge * n.charge / rSquared;
 
         let f = e.pos.clone().sub(n.pos);
         f = f.normalize().multiplyScalar(attractionMagnitude);

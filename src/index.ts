@@ -84,8 +84,8 @@ export class ChemScene extends SimpleScene {
 		let timer = 0.002 * Date.now()
 
 
-		this.molecule.calc(0.000005);
-		this.molecule.update();
+		this.molecule.Ĥ();
+		this.molecule.update(1);
 		this.updateMesh(this.molecule);
 
 
