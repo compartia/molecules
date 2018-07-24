@@ -11,19 +11,17 @@ export class DensityMatrix {
     min: T.Vector3;
     max: T.Vector3;
     cellSize: T.Vector3;
-    numberOfCellsOnSide: number;
+    numberOfCells: T.Vector3;
 
-    constructor(min: T.Vector3, max: T.Vector3, numberOfCellsOnSide: number) {
+    constructor(min: T.Vector3, max: T.Vector3, numberOfCells: T.Vector3) {
         this.min = min.clone();
         this.max = max.clone();
-        this.numberOfCellsOnSide = numberOfCellsOnSide;
+        this.numberOfCells = numberOfCells.clone();
 
-        this.cellSize = max.clone().sub(min).divideScalar(numberOfCellsOnSide);
+        this.cellSize = max.clone().sub(min).divide(numberOfCells);
 
 
-        const n = numberOfCellsOnSide;
-
-        this.tensor = new Array(n * n * n);
+        this.tensor = new Array(numberOfCells.x * numberOfCells.y * numberOfCells.z);
         for (let x = 0; x < this.tensor.length; x++) {
             this.tensor[x] = 0;
         }
@@ -50,7 +48,7 @@ export class DensityMatrix {
     }
 
     public catchPos(pos: T.Vector3, charge: number) {
-        if(isNaN(charge)) return;
+        if (isNaN(charge)) return;
 
         let relativePos = pos.clone().sub(this.min);
         let x = Math.floor(relativePos.x / this.cellSize.x);
@@ -73,12 +71,13 @@ export class DensityMatrix {
 
     private inRange(x, y, z) {
         if (x < 0 || y < 0 || z < 0) return false;
-        if (x > this.numberOfCellsOnSide && y > this.numberOfCellsOnSide && z > this.numberOfCellsOnSide) return false;
+        if (x >= this.numberOfCells.x || y >= this.numberOfCells.y || z >= this.numberOfCells.z) return false;
         return true;
     }
 
     public index(x, y, z) {
-        return (x * this.numberOfCellsOnSide * this.numberOfCellsOnSide) + (y * this.numberOfCellsOnSide) + z;
+        // x + WIDTH * (y + DEPTH * z)
+        return x + this.numberOfCells.x * (y + z * this.numberOfCells.y);
     }
 
 

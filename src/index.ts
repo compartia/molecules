@@ -49,36 +49,41 @@ export class ChemScene extends SimpleScene {
 		this.molecule = m;
 
 
-
 		this.makeDensityMatrix();
-
 
 
 	}
 
 	private makeDensityMatrix() {
-		let side = 10;
-		let rad = 4;
-		this.gridMesh = new Array(side * side * side);
-		const dm: DensityMatrix = new DensityMatrix(new T.Vector3(-rad, -rad, -rad), new T.Vector3(rad, rad, rad), side);
-		dm.randomize();
-		for (let x = 0; x < side; x++) {
-			for (let y = 0; y < side; y++) {
-				for (let z = 0; z < side; z++) {
 
-					const cc = dm.getCellCenter(x, y, z);
+		const rad = 7;
+		const side = new T.Vector3(40, 1, 40);
+
+		this.gridMesh = new Array(side.x * side.y * side.z);
+		const dm: DensityMatrix = new DensityMatrix(new T.Vector3(-rad, -0.5, -rad), new T.Vector3(rad, 0.5, rad), side);
+
+		dm.randomize();
+		dm.setAt(0,0,0,0.1);
+
+		for (let _x = 0; _x < side.x; _x++) {
+			for (let _y = 0; _y < side.y; _y++) {
+				for (let _z = 0; _z < side.z; _z++) {
+
+					const cc = dm.getCellCenter(_x, _y, _z);
 					let mesh = new T.Mesh(new T.IcosahedronGeometry(0.1, 1), Lib.trans);
-					mesh.position.x = cc.x;
-					mesh.position.y = cc.y;
-					mesh.position.z = cc.z;
+					mesh.position.x = cc.x;//+Math.random()* side.x/rad;
+					mesh.position.y = cc.y;//+Math.random()* side.y/rad;
+					mesh.position.z = cc.z;//+Math.random()*side.z/rad;
+ 
 					this.scene.add(mesh);
 
-					this.gridMesh[dm.index(x, y, z)] = mesh;
+					this.gridMesh[dm.index(_x, _y, _z)] = mesh;
 				}
 			}
 		}
-		this.densityMatrix = dm;
 
+		this.densityMatrix = dm;
+ 
 
 	}
 

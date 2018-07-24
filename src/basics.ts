@@ -8,24 +8,24 @@ export class Lib {
 
 
 	public static materialStandard = new T.MeshStandardMaterial({
-		color: 0xcc4466,
-		metalness: 0.3,
+		color: 0xffcccc,
+		metalness: 0.5,
 		roughness: 0.8,
 		side: T.FrontSide
 	});
 
 
 	public static shiny = new T.MeshPhongMaterial({
-		color: 0xaaaacc, specular: 0xffffff, shininess: 250,
+		color: 0xcc00cc, specular: 0xffffff, shininess: 250,
 		// wireframe: true,
 		side: T.FrontSide, vertexColors: T.VertexColors
 	});
 
 	public static trans = new T.MeshPhongMaterial({
-		color: 0xffffff, specular: 0xffffff, shininess: 100,
+		color: 0x6666ff, specular: 0x6666ff, shininess: 100,
 		// wireframe: true,
 		transparent:true,
-		opacity:0.3,
+		opacity:0.5,
 		side: T.DoubleSide, vertexColors: T.VertexColors
 	});
 }
@@ -107,16 +107,16 @@ export abstract class SimpleScene {
 	private makeLights() {
 		// add lights
 		{
-			let light0 = new T.PointLight(0xff0000, 0.9)
+			let light0 = new T.PointLight(0xff4444, 0.9)
 			light0.position.set(0, 0, 0)
 			this.scene.add(light0);
 
 		}
-		this.light1 = new T.DirectionalLight(0xee5555, 0.3)
+		this.light1 = new T.DirectionalLight(0xee9955, 0.2)
 		this.light1.position.set(100, 100, 100)
 		this.scene.add(this.light1);
 
-		let light2 = new T.DirectionalLight(0xffffff, 0.3)
+		let light2 = new T.DirectionalLight(0xffffff, 0.9)
 		light2.position.set(-100, 100, -100)
 		this.scene.add(light2)
 	}

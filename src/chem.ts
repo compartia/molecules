@@ -3,11 +3,11 @@ import * as T from 'three'
 export const CONSTANTS = {
     ELECTRON_MASS: 0.00054858, //in atomic unit
     ELECTRON_CHARGE: -1,
-
 }
+
 export const PARAMS = {
     speed: 0.000005,
-    COULUMB_GAUGE: 0.1
+    COULUMB_GAUGE: 1
 }
 
 export interface SimpleParticle {
